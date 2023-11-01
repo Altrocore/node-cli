@@ -18,38 +18,47 @@ function logEvent(event) {
 
 // CLI prompts for CRUD operations
 rl.question('Enter users file name: ', (fileName) => {
-    let users;
+    let users = { users: [] };
     let isFile = fs.existsSync(`${fileName}.json`);
     if (isFile) {
         users = readFile(`${fileName}.json`);
         console.log(`File '${fileName}' already exists`);
         logEvent(`File '${fileName}' already exists`);
       } else {
-        let users = users = { users: [] };
         createFile(fileName, users);
         logEvent(`Created users file: ${fileName}`);
       }
     
     const menu = () => {
-        console.log('\n1. Create user\n2. Update user\n3. Delete user\n4. Search for a user\n5. Exit');
+        console.log('\n1. Create user\n2. Update user\n3. Delete user\n4. Search for a user\n5. Create config file\n6. Exit');
         rl.question('Choose an option: ', (option) => {
             switch(option) {
                 case '1':
-                    rl.question('Enter username to create: ', (username) => {
-                        users = createUser(users, username);
-                        logEvent(`Created user: ${username}`);
-                        if (isFile) {
-                            updateFile
+                    console.log('Choose user role:\n 1. End user\n 2. Helpdesk employee\n 3. System administrator');
+                    rl.question('Choose an option: ', (role) => {
+                        let userRole;
+                        switch(role) {
+                            case '1':
+                                userRole = 'End user'
+                            case '2':
+                                userRole = 'Helpdesk employee'
+                            case '3':
+                                userRole = 'System administrator'
                         }
-                        createFile(fileName, users);
-                        menu();
-                    });
+                        rl.question('Enter username to create: ', (username) => {
+                            users = createUser(users, username, userRole);
+                            logEvent(`Created user: ${username}`);
+                            createFile(fileName, users);
+                            menu();
+                        });
+                    })
                     break;
                 case '2':
                     rl.question('Enter username to update: ', (username) => {
                         rl.question('Enter new username: ', (newUsername) => {
                             users = updateUser(users, username, newUsername);
-                            logEvent(`User updated: ${username + "==>" + newUsername}`)
+                            console.log(`User updated: ${username + " ==> " + newUsername}`)
+                            logEvent(`User updated: ${username + " ==> " + newUsername}`)
                             createFile(fileName, users);
                             menu();
                         });
@@ -58,6 +67,7 @@ rl.question('Enter users file name: ', (fileName) => {
                 case '3':
                     rl.question('Enter username to delete: ', (username) => {
                         users = deleteUser(users, username);
+                        console.log(`User deleted ${username}`)
                         logEvent(`User deleted ${username}`)
                         createFile(fileName, users);
                         menu();
@@ -71,16 +81,44 @@ rl.question('Enter users file name: ', (fileName) => {
                     });
                     break;
                 case '5':
+                    config();
+                case '6':
                     rl.close();
-                    process.exit(0);
+                    process.exit();
                 default:
                     console.log('Invalid option');
                     menu();
             }
         });
     };
-    
+
     menu();
+
+    const config = () => {
+        console.log('Create config file: ');
+        rl.question('Enter the database host: ', (host) => {
+            rl.question('Enter the database port: ', (port) => {
+            rl.question('Enter the database username: ', (username) => {
+                rl.question('Enter the database password: ', (password) => {
+                rl.close();
+        
+                const config = {
+                    host,
+                    port,
+                    username,
+                    password
+                };
+        
+                fs.writeFileSync('config.json', JSON.stringify(config, null, 2));
+        
+                console.log('Config file created successfully');
+                menu();
+                });
+            });
+            });
+        });
+    }
+    
 });
 
 // HTTP server to generate tokens and serve form
@@ -93,7 +131,6 @@ http.createServer((req, res) => {
         res.write('<form action="/submit-username" method="post"><input type="text" name="username" placeholder="Enter your username"><input type="submit" value="Submit"></form>');
         res.end();
     } else if (req.url === '/submit-username') {
-        // handle form submission...
         res.end();
     } else {
         res.write('Invalid request');

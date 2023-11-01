@@ -5,9 +5,9 @@ function generateToken() {
     return crypto.createHash('sha256').update(Math.random().toString()).digest('hex');
 }
 
-function createUser(users, username) {
+function createUser(users, username, userRole) {
     const token = generateToken();
-    users.users.push({ username, token });
+    users.users.push({ username, token, userRole });
     return users;
 }
 

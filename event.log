@@ -24,3 +24,15 @@
 2023-11-01T02:07:46.380Z - File 'users' already exists
 2023-11-01T03:16:29.404Z - File 'users' already exists
 2023-11-01T03:16:44.480Z - Created user: Cory
+2023-11-01T18:21:08.923Z - File 'users' already exists
+2023-11-01T18:22:53.194Z - File 'users' already exists
+2023-11-01T18:23:06.484Z - Created user: alex
+2023-11-01T18:36:59.987Z - Created users file: users
+2023-11-01T18:37:14.543Z - Created user: alex
+2023-11-01T18:45:06.741Z - Created users file: users
+2023-11-01T18:46:45.501Z - Created users file: users
+2023-11-01T18:46:54.737Z - Created user: Valya
+2023-11-01T18:49:20.921Z - Created users file: users
+2023-11-01T18:49:28.151Z - User deleted alex
+2023-11-01T18:51:07.188Z - Created users file: users
+2023-11-01T18:51:26.150Z - User updated: Valya==>Griwa
