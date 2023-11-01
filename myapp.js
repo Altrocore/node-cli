@@ -3,63 +3,32 @@ const readline = require('readline');
 const crypto = require('crypto');
 const http = require('http');
 const path = require('path');
+const { generateToken, createUser, updateUser, deleteUser, searchUser } = require('./userManagement');
+const { createFile, readFile, updateFile } = require('./fileOperations');
 
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
 });
 
-// Function to create new file
-function createFile(fileName, content) {
-    fs.writeFileSync(fileName, JSON.stringify(content, null, 2));
-}
-
-// Function to read file
-function readFile(fileName) {
-    return JSON.parse(fs.readFileSync(fileName));
-}
-
-// Function to generate token
-function generateToken() {
-    return crypto.createHash('sha256').update(Math.random().toString()).digest('hex');
-}
-
 // Function to log events
 function logEvent(event) {
     fs.appendFileSync('event.log', `${new Date().toISOString()} - ${event}\n`);
 }
 
-// Function to create user
-function createUser(users, username) {
-    const token = generateToken();
-    users.users.push({ username, token });
-    return users;
-}
-
-// Function to update user
-function updateUser(users, username, newUsername) {
-    const user = users.users.find(user => user.username === username);
-    if (user) {
-        user.username = newUsername;
-    }
-    return users;
-}
-
-// Function to delete user
-function deleteUser(users, username) {
-    users.users = users.users.filter(user => user.username !== username);
-    return users;
-}
-
-// Function to search for a user
-function searchUser(users, query) {
-    return users.users.find(user => user.username === query || user.email === query || user.phone === query);
-}
-
 // CLI prompts for CRUD operations
-rl.question('Enter users file name: ', (usersFileName) => {
-    let users = { users: [] };
-    createFile(usersFileName, users);
+rl.question('Enter users file name: ', (fileName) => {
+    let users;
+    let isFile = fs.existsSync(`${fileName}.json`);
+    if (isFile) {
+        users = readFile(`${fileName}.json`);
+        console.log(`File '${fileName}' already exists`);
+        logEvent(`File '${fileName}' already exists`);
+      } else {
+        let users = users = { users: [] };
+        createFile(fileName, users);
+        logEvent(`Created users file: ${fileName}`);
+      }
     
     const menu = () => {
         console.log('\n1. Create user\n2. Update user\n3. Delete user\n4. Search for a user\n5. Exit');
@@ -68,7 +37,11 @@ rl.question('Enter users file name: ', (usersFileName) => {
                 case '1':
                     rl.question('Enter username to create: ', (username) => {
                         users = createUser(users, username);
-                        createFile(usersFileName, users);
+                        logEvent(`Created user: ${username}`);
+                        if (isFile) {
+                            updateFile
+                        }
+                        createFile(fileName, users);
                         menu();
                     });
                     break;
@@ -76,7 +49,8 @@ rl.question('Enter users file name: ', (usersFileName) => {
                     rl.question('Enter username to update: ', (username) => {
                         rl.question('Enter new username: ', (newUsername) => {
                             users = updateUser(users, username, newUsername);
-                            createFile(usersFileName, users);
+                            logEvent(`User updated: ${username + "==>" + newUsername}`)
+                            createFile(fileName, users);
                             menu();
                         });
                     });
@@ -84,7 +58,8 @@ rl.question('Enter users file name: ', (usersFileName) => {
                 case '3':
                     rl.question('Enter username to delete: ', (username) => {
                         users = deleteUser(users, username);
-                        createFile(usersFileName, users);
+                        logEvent(`User deleted ${username}`)
+                        createFile(fileName, users);
                         menu();
                     });
                     break;
@@ -97,7 +72,7 @@ rl.question('Enter users file name: ', (usersFileName) => {
                     break;
                 case '5':
                     rl.close();
-                    break;
+                    process.exit(0);
                 default:
                     console.log('Invalid option');
                     menu();
