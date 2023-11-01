@@ -1,6 +1,4 @@
-Here's a manual for your file:
 
-The file `index.js` exports three functions for user management and two functions for file operations:
 
 1. `generateToken()`: This function generates a random token and returns it as a string.
 
