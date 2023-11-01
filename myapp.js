@@ -39,11 +39,14 @@ rl.question('Enter users file name: ', (fileName) => {
                         let userRole;
                         switch(role) {
                             case '1':
-                                userRole = 'End user'
+                                userRole = 'End user';
+                                break;
                             case '2':
-                                userRole = 'Helpdesk employee'
+                                userRole = 'Helpdesk employee';
+                                break;
                             case '3':
-                                userRole = 'System administrator'
+                                userRole = 'System administrator';
+                                break;
                         }
                         rl.question('Enter username to create: ', (username) => {
                             users = createUser(users, username, userRole);
@@ -81,12 +84,31 @@ rl.question('Enter users file name: ', (fileName) => {
                     });
                     break;
                 case '5':
-                    config();
+                    console.log('Create config file: ');
+                    rl.question('Enter the database host: ', (host) => {
+                        rl.question('Enter the database port: ', (port) => {
+                            rl.question('Enter the database username: ', (username) => {
+                                rl.question('Enter the database password: ', (password) => {
+                                const config = {
+                                    host,
+                                    port,
+                                    username,
+                                    password
+                                };
+                                fs.writeFileSync('config.json', JSON.stringify(config, null, 2));
+                                console.log('\nConfig file created successfully');
+                                menu();
+                                });
+                            });
+                        });
+                    });
+                    break;
                 case '6':
+                    console.log('\nProcess finished')
                     rl.close();
                     process.exit();
                 default:
-                    console.log('Invalid option');
+                    console.log('\nInvalid option');
                     menu();
             }
         });
@@ -94,31 +116,6 @@ rl.question('Enter users file name: ', (fileName) => {
 
     menu();
 
-    const config = () => {
-        console.log('Create config file: ');
-        rl.question('Enter the database host: ', (host) => {
-            rl.question('Enter the database port: ', (port) => {
-            rl.question('Enter the database username: ', (username) => {
-                rl.question('Enter the database password: ', (password) => {
-                rl.close();
-        
-                const config = {
-                    host,
-                    port,
-                    username,
-                    password
-                };
-        
-                fs.writeFileSync('config.json', JSON.stringify(config, null, 2));
-        
-                console.log('Config file created successfully');
-                menu();
-                });
-            });
-            });
-        });
-    }
-    
 });
 
 // HTTP server to generate tokens and serve form
