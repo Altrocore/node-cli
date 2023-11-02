@@ -1,4 +1,4 @@
-
+to run cli u should go to the root foolder of the app and run command: node myapp
 
 1. `generateToken()`: This function generates a random token and returns it as a string.
 
