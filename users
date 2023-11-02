@@ -1,0 +1,28 @@
+{
+  "users": [
+    {
+      "username": "asdasd",
+      "token": "c52ae127f86aad36ea7ad0fa5ef8834662f8b613c71df7274e1dc999e922808e",
+      "userRole": "System administrator",
+      "password": "asdasd"
+    },
+    {
+      "username": "q",
+      "token": "1d5c82df344c0a890784f6b03a2bd0a199a5720de1d56241cf8e6c656dbfcddf",
+      "userRole": "Helpdesk employee",
+      "password": "q"
+    },
+    {
+      "username": "w",
+      "token": "ad7bbe3373837a638f83ad96670410dff9ca9563838f27afc3261116a59f85db",
+      "userRole": "Helpdesk employee",
+      "password": "w"
+    },
+    {
+      "username": "q",
+      "token": "33841db4fd9ebc71864491677bc19a05f980b405db94ca9a1dd6d401470b73c0",
+      "userRole": "Helpdesk employee",
+      "password": "q"
+    }
+  ]
+}

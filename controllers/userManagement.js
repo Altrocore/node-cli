@@ -5,14 +5,13 @@ function generateToken() {
     return crypto.createHash('sha256').update(Math.random().toString()).digest('hex');
 }
 
-function createUser(users, username, userRole) {
+function createUser(users, username, userRole, password) {
     const token = generateToken();
-    users.users.push({ username, token, userRole });
+    users.users.push({ username, token, userRole, password });
     return users;
 }
 
 function updateUser(users, username, newUsername) {
-  console.log(users)
     const user = users.users.find(user => user.username === username);
     if (user) {
         user.username = newUsername;

@@ -9,7 +9,7 @@ function readFile(fileName) {
 }
 
 function updateFile(fileName, newUser) {
-    const users = JSON.parse(fs.readFileSync(`${fileName}.json`));
+    const users = JSON.parse(fs.readFileSync(fileName));
     users.push(newUser);
     const updatedJson = JSON.stringify(users, null, 2);
     fs.writeFileSync(fileName, updatedJson);
